@@ -239,8 +239,8 @@ def cancel(job):
 @click.option('--num', type=int, default=1, help='number')
 @click.option('--art_genre', type=str, help='art genre')
 @click.option('--seed', type=str, help='seed')
-def calc_cost(style_id, prompt, uc_prompt, width, height, init_image_url, init_image_similarity, mask_zone_image_url,
-              num, art_genre, steps, cfg_scale, sampler_name, seed):
+def calc_cost(style_id, prompt, uc_prompt, width, height, init_image_url, init_image_similarity,
+              num, art_genre, seed):
     req = {
         "style_id": style_id,
         "prompt": prompt,
@@ -249,7 +249,6 @@ def calc_cost(style_id, prompt, uc_prompt, width, height, init_image_url, init_i
         "height": height,
         "init_image_url": init_image_url,
         "init_image_similarity": init_image_similarity,
-        "mask_zone_image_url": mask_zone_image_url,
         "num": num,
         "art_genre": art_genre,
         "seed": seed
