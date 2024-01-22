@@ -45,9 +45,11 @@ Set the appid，and save it in the current directory`appid.txt`
 
 ### generate-key
 
-`python3 api.py generate-key`
+Generate private keys files private_key.txt, save them in the current directory
 
-Generate public and private keys, save them in the current directory`private_key.txt`and`public_key.txt`
+replace the private key by your web Open API in https://maze.guru/setting
+
+![img](./img/setting.png)
 
 ### sign
 
