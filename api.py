@@ -84,7 +84,7 @@ def get_requests(url, headers):
     return response_data(resp)
 
 
-# RSA签名
+# RSA sign
 def rsa_sign(appid):
     now = int(time.time())
     plain_text = {
@@ -104,7 +104,7 @@ def rsa_sign(appid):
     return json.dumps(auth, separators=(',', ':'))
 
 
-# 生成公私钥
+# generate private key and public key
 @click.command()
 def generate_key():
     pri, pub = generate_new_key()
@@ -115,7 +115,7 @@ def generate_key():
     click.echo(f'generate keys in {private_key_path}, {public_key_path}')
 
 
-# 设置appid
+# set appid
 @click.command()
 @click.option('--appid', required=True, type=str, help='application id')
 def set_appid(appid):
@@ -127,7 +127,7 @@ def set_appid(appid):
     click.echo(f'success set appid in {appid_path}')
 
 
-# RSA签名
+# RSA sign
 @click.command()
 def sign():
     appid = get_appid()
@@ -142,7 +142,7 @@ def style_base_infos():
     click.echo(json.dumps(resp))
 
 
-# 获取指定的模型资源
+# get
 @click.command()
 @click.option('--style_id', required=True, type=int, help='style id')
 def style_resource(style_id):
@@ -161,7 +161,8 @@ def style_resource(style_id):
 @click.option('--num', type=int, default=1, help='number')
 @click.option('--art_genre', type=str, help='art genre')
 @click.option('--seed', type=str, help='seed')
-def txt2img(style_id, prompt, uc_prompt, width, height, num, art_genre, seed):
+@click.option('--mj_stylize', type=int, help='mj_stylize')
+def txt2img(style_id, prompt, uc_prompt, width, height, num, art_genre, seed, mj_stylize):
     req = {
         "style_id": style_id,
         "prompt": prompt,
@@ -170,7 +171,8 @@ def txt2img(style_id, prompt, uc_prompt, width, height, num, art_genre, seed):
         "height": height,
         "num": num,
         "art_genre": art_genre,
-        "seed": seed
+        "seed": seed,
+        "mj_stylize": mj_stylize
     }
     resp = post_requests(open_url + '/txt2img', get_headers(), req)
     click.echo(json.dumps(resp))
@@ -188,7 +190,9 @@ def txt2img(style_id, prompt, uc_prompt, width, height, num, art_genre, seed):
 @click.option('--num', type=int, default=1, help='number')
 @click.option('--art_genre', type=str, help='art genre')
 @click.option('--seed', type=str, help='seed')
-def img2img(style_id, prompt, uc_prompt, width, height, init_image_url, init_image_similarity, num, art_genre, seed):
+@click.option('--mj_stylize', type=int, help='mj_stylize')
+def img2img(style_id, prompt, uc_prompt, width, height, init_image_url, init_image_similarity, num, art_genre, seed,
+            mj_stylize):
     req = {
         "style_id": style_id,
         "prompt": prompt,
@@ -199,13 +203,14 @@ def img2img(style_id, prompt, uc_prompt, width, height, init_image_url, init_ima
         "init_image_similarity": init_image_similarity,
         "num": num,
         "art_genre": art_genre,
-        "seed": seed
+        "seed": seed,
+        "mj_stylize": mj_stylize
     }
     resp = post_requests(open_url + '/img2img', get_headers(), req)
     click.echo(json.dumps(resp))
 
 
-# 获取模型列表
+# get generate result
 @click.command()
 @click.option('--jobs', required=True, type=str, help='jobs')
 def generate_result(jobs):
@@ -216,7 +221,7 @@ def generate_result(jobs):
     click.echo(json.dumps(resp))
 
 
-# 取消作画
+# cancel job
 @click.command()
 @click.option('--job', required=True, type=str, help='job')
 def cancel(job):
@@ -227,7 +232,7 @@ def cancel(job):
     click.echo(json.dumps(resp))
 
 
-# 计算作画成本
+# calculate cost
 @click.command()
 @click.option('--style_id', required=True, type=int, help='style id')
 @click.option('--prompt', required=True, type=str, help='prompt')
@@ -239,8 +244,9 @@ def cancel(job):
 @click.option('--num', type=int, default=1, help='number')
 @click.option('--art_genre', type=str, help='art genre')
 @click.option('--seed', type=str, help='seed')
+@click.option('--mj_stylize', type=int, help='mj_stylize')
 def calc_cost(style_id, prompt, uc_prompt, width, height, init_image_url, init_image_similarity,
-              num, art_genre, seed):
+              num, art_genre, seed, mj_stylize):
     req = {
         "style_id": style_id,
         "prompt": prompt,
@@ -251,13 +257,14 @@ def calc_cost(style_id, prompt, uc_prompt, width, height, init_image_url, init_i
         "init_image_similarity": init_image_similarity,
         "num": num,
         "art_genre": art_genre,
-        "seed": seed
+        "seed": seed,
+        "mj_stylize": mj_stylize
     }
     resp = post_requests(open_url + '/calc-cost', get_headers(), req)
     click.echo(json.dumps(resp))
 
 
-# 获取上传底图的签名凭证
+# create upload token
 @click.command()
 @click.option('--file_name', required=True, type=str, help='file name')
 def create_upload_token(file_name):
@@ -266,14 +273,14 @@ def create_upload_token(file_name):
     click.echo(json.dumps(resp))
 
 
-# 获取上传底图的签名凭证
+# get point balance
 @click.command()
 def balance():
     resp = get_requests(open_url + '/balance', get_headers())
     click.echo(json.dumps(resp))
 
 
-# 超分
+# upscale
 @click.command()
 @click.option('--job', required=True, type=str, help='job')
 def upscale(job):
@@ -284,7 +291,7 @@ def upscale(job):
     click.echo(json.dumps(resp))
 
 
-# 超分结果查询
+# query upscale result
 @click.command()
 @click.option('--jobs', required=True, type=str, help='jobs')
 def upscale_result(jobs):
@@ -295,7 +302,7 @@ def upscale_result(jobs):
     click.echo(json.dumps(resp))
 
 
-# 上传图片到oss
+# upload image to oss
 @click.command()
 @click.option('--sign_url', required=True, type=str, help='sign_url')
 @click.option('--file', required=True, type=str, help='file path')
