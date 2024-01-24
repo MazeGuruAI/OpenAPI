@@ -135,14 +135,14 @@ def sign():
     click.echo(f'{signed}')
 
 
-# 获取模型列表
+# get model list
 @click.command()
 def style_base_infos():
     resp = get_requests(open_url + '/style-base-infos', get_headers())
     click.echo(json.dumps(resp))
 
 
-# get
+# get model detail info
 @click.command()
 @click.option('--style_id', required=True, type=int, help='style id')
 def style_resource(style_id):
